@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ConsoleApplication1
+namespace Chapter_01
 {
     //----------------------------------------------
     // References
@@ -36,18 +36,24 @@ namespace ConsoleApplication1
         /// <remarks>This function can support any base system supported by <see cref="BaseSystem"/>, we assume that all Base systems above decimal make use of A-F characters</remarks>
         public static void ConvertBase(string number, BaseSystem frombase, BaseSystem toBase)
         {
-            int decimalValue = ToDecimal(number, frombase);
+            int decimalValue;
+            if(ToDecimal(number, frombase, out decimalValue))
+            {
+
+            }
         }
 
         /// <summary>
         /// Converts a number from any base system to Decimal.
         /// </summary>
         /// <param name="number">Digits should be ordered in the array from most to least significant. 724 would be [ 7, 2, 4]</param>
-        /// <returns>The number converted to decimal</returns>
+        /// <returns>True if conversion was successful</returns>
         /// <remarks>This function can support any base system supported by <see cref="BaseSystem"/>, we assume that all Base systems above decimal make use of A-F characters</remarks>
-        private static int ToDecimal(string number, BaseSystem frombase)
+        public static bool ToDecimal(string number, BaseSystem frombase, out int convertedValue)
         {
-            // Reverse for ease of calculation
+            convertedValue = 0;
+
+            // Reverse for ease of calculation, index corresponds to digit position in number
             char[] splitNumber = number.ToCharArray();
             Array.Reverse(splitNumber);
 
@@ -57,29 +63,24 @@ namespace ConsoleApplication1
 
             if (splitNumber.Length - 1 > largestSupportedIndex)
             {
-                throw new OverflowException(string.Format("A {0} number with the most significant digit being {1} cannot have more than {2} digits. You have {3} digits.",
-                    frombase,
-                    mostSignificantDigit,
-                    largestSupportedIndex + 1,
-                    splitNumber.Length));
+                return false;
             }
 
             // Digit x Base ^ Index = DecimalOfDigit
-            int decimalConversion = 0;
             for (int i = splitNumber.Length - 1; i >= 0; i--)
             {
                 // WHAT about overflowing an int for large numbers?
                 int decimalNumber = Parse(splitNumber[i], frombase) * (int)Math.Pow((int)frombase, i);
 
-                if (decimalNumber > int.MaxValue - decimalConversion)
+                if (decimalNumber > int.MaxValue - convertedValue)
                 {
-                    throw new OverflowException("The number has overflowed the integer during decimal conversion.");
+
                 }
 
-                decimalConversion += decimalNumber;
+                convertedValue += decimalNumber;
             }
 
-            return decimalConversion;
+            return true;
         }
 
         private static int Parse(char number, BaseSystem baseSystem)
