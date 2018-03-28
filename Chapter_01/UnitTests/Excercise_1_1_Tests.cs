@@ -18,8 +18,11 @@ namespace UnitTests
         [TestMethod]
         public void DecimalConversionOverflowTest()
         {
-            // 8001869F == 2147583647 which exceeds int.MaxValue by 500000
             int convertedValue;
+
+            // 1111111111111111111111111111111 == int.MaxValue
+            Assert.IsTrue(Excercise_1_1.ToDecimal("1111111111111111111111111111111", Excercise_1_1.BaseSystem.Binary, out convertedValue));
+            // 8001869F == 2147583647 which exceeds int.MaxValue by 500000
             Assert.IsFalse(Excercise_1_1.ToDecimal("8001869F", Excercise_1_1.BaseSystem.Hexadecimal, out convertedValue));
         }
     }

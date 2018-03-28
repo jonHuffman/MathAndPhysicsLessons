@@ -74,7 +74,7 @@ namespace Chapter_01
 
                 if (decimalNumber > int.MaxValue - convertedValue)
                 {
-
+                    return false;
                 }
 
                 convertedValue += decimalNumber;
