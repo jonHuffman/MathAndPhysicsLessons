@@ -34,22 +34,26 @@ namespace Chapter_01
         /// </summary>
         /// <param name="number">Digits should be ordered in the array from most to least significant. 724 would be [ 7, 2, 4] </param>
         /// <remarks>This function can support any base system supported by <see cref="BaseSystem"/>, we assume that all Base systems above decimal make use of A-F characters</remarks>
-        public static void ConvertBase(string number, BaseSystem frombase, BaseSystem toBase)
+        public static string ConvertBase(string number, BaseSystem frombase, BaseSystem toBase)
         {
+            string convertedValue = "";
             int decimalValue;
-            if(ToDecimal(number, frombase, out decimalValue))
-            {
 
+            if (BaseToDecimal(number, frombase, out decimalValue))
+            {
+                DecimalToBase(decimalValue, toBase, ref convertedValue);
             }
+
+            return convertedValue;
         }
 
         /// <summary>
-        /// Converts a number from any base system to Decimal.
+        /// Converts a positive number from any base system to Decimal.
         /// </summary>
         /// <param name="number">Digits should be ordered in the array from most to least significant. 724 would be [ 7, 2, 4]</param>
         /// <returns>True if conversion was successful</returns>
         /// <remarks>This function can support any base system supported by <see cref="BaseSystem"/>, we assume that all Base systems above decimal make use of A-F characters</remarks>
-        public static bool ToDecimal(string number, BaseSystem frombase, out int convertedValue)
+        public static bool BaseToDecimal(string number, BaseSystem frombase, out int convertedValue)
         {
             convertedValue = 0;
 
@@ -83,6 +87,28 @@ namespace Chapter_01
             return true;
         }
 
+        /// <summary>
+        /// Recurcively converts a positive number from decimal to another base system
+        /// </summary>
+        /// <param name="number">The number to convert</param>
+        /// <param name="toBase">The base system to convert it to</param>
+        /// <param name="convertedValue">The converted value</param>
+        /// <remarks>This function can support any base system supported by <see cref="BaseSystem"/>, we assume that all Base systems above decimal make use of A-F characters</remarks>
+        public static void DecimalToBase(int number, BaseSystem toBase, ref string convertedValue)
+        {
+            number = Math.Abs(number);
+
+            if(number < (int)toBase)
+            {
+                convertedValue += ConvertToBaseString(number, toBase);
+                return;
+            }
+
+            int remainder = number % (int)toBase;
+            DecimalToBase((number - remainder) / (int)toBase, toBase, ref convertedValue);
+            convertedValue += ConvertToBaseString(remainder, toBase);
+        }
+
         private static int Parse(char number, BaseSystem baseSystem)
         {
             int value = (int)char.GetNumericValue(number);
@@ -114,6 +140,39 @@ namespace Chapter_01
                         return 15;
                     default:
                         throw new NotSupportedException(string.Format("Character {0} is not supported by this conversion tool.", number));
+                }
+            }
+        }
+
+        private static string ConvertToBaseString(int number, BaseSystem baseSystem)
+        {
+            if(number < 0)
+            {
+                number = Math.Abs(number);
+            }
+
+            if (number <= 9)
+            {
+                return number.ToString();
+            }
+            else
+            {
+                switch (number)
+                {
+                    case 10:
+                        return "A";
+                    case 11:
+                        return "B";
+                    case 12:
+                        return "C";
+                    case 13:
+                        return "D";
+                    case 14:
+                        return "E";
+                    case 15:
+                        return "F";
+                    default:
+                        throw new NotSupportedException(string.Format("Number {0} is not supported by this conversion tool.", number));
                 }
             }
         }
