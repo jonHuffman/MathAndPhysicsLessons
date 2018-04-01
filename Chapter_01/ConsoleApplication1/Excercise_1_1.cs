@@ -39,9 +39,22 @@ namespace Chapter_01
             string convertedValue = "";
             int decimalValue;
 
+            char firstCharacter = number[0];
+            bool isNegative = firstCharacter.Equals('-');
+
+            if (isNegative)
+            {
+                number = number.Remove(0, 1);
+            } 
+
             if (BaseToDecimal(number, frombase, out decimalValue))
             {
                 DecimalToBase(decimalValue, toBase, ref convertedValue);
+            }
+
+            if(isNegative)
+            {
+                convertedValue = string.Format("-{0}", convertedValue);
             }
 
             return convertedValue;

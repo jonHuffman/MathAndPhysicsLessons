@@ -58,6 +58,24 @@ namespace UnitTests
         }
 
         [TestMethod]
+        public void NegativeConversionTest()
+        {
+            string NegativeTernaryValue      = string.Format("-{0}", TernaryValue);
+            string NegativeQuinaryValue      = string.Format("-{0}", QuinaryValue);
+            string NegativeSenaryValue       = string.Format("-{0}", SenaryValue);
+            string NegativeOctalValue        = string.Format("-{0}", OctalValue);
+            string NegativeUndecimalValue    = string.Format("-{0}", UndecimalValue);
+            string NegativePentadecimalValue = string.Format("-{0}", PentadecimalValue);
+
+            Assert.AreEqual(NegativeTernaryValue,       Excercise_1_1.ConvertBase(NegativePentadecimalValue,    Excercise_1_1.BaseSystem.Pentadecimal,  Excercise_1_1.BaseSystem.Ternary));
+            Assert.AreEqual(NegativeQuinaryValue, Excercise_1_1.ConvertBase(NegativeSenaryValue, Excercise_1_1.BaseSystem.Senary, Excercise_1_1.BaseSystem.Quinary));
+            Assert.AreEqual(NegativeTernaryValue, Excercise_1_1.ConvertBase(NegativeOctalValue, Excercise_1_1.BaseSystem.Octal, Excercise_1_1.BaseSystem.Ternary));
+            Assert.AreEqual(NegativeOctalValue, Excercise_1_1.ConvertBase(NegativeUndecimalValue, Excercise_1_1.BaseSystem.Undecimal, Excercise_1_1.BaseSystem.Octal));
+            Assert.AreEqual(NegativeTernaryValue, Excercise_1_1.ConvertBase(NegativeUndecimalValue, Excercise_1_1.BaseSystem.Undecimal, Excercise_1_1.BaseSystem.Ternary));
+            Assert.AreEqual(NegativePentadecimalValue, Excercise_1_1.ConvertBase(NegativeOctalValue, Excercise_1_1.BaseSystem.Octal, Excercise_1_1.BaseSystem.Pentadecimal));
+        }
+
+        [TestMethod]
         public void BinaryConversionTest()
         {
             Assert.AreEqual(BinaryValue, Excercise_1_1.ConvertBase(TernaryValue,        Excercise_1_1.BaseSystem.Ternary,       Excercise_1_1.BaseSystem.Binary));
